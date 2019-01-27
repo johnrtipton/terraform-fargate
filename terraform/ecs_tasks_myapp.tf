@@ -32,7 +32,7 @@ resource "aws_ecs_service" "myapp" {
   load_balancer {
    target_group_arn = "${aws_alb_target_group.myapp.arn}"
    container_name = "myapp"
-   container_port = 3000
+   container_port = 5000
   }
 
   depends_on = [

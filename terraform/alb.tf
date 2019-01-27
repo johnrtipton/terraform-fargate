@@ -16,7 +16,7 @@ resource "aws_alb" "myapp" {
 resource "aws_alb_target_group" "myapp" {
   name = "myapp"
   protocol = "HTTP"
-  port = "3000"
+  port = "5000"
   vpc_id = "${module.base_vpc.vpc_id}"
   target_type = "ip"
 
