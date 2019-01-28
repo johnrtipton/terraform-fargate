@@ -1,3 +1,4 @@
+# -- PROD --
 data "template_file" "myapp" {
   template = "${file("templates/ecs/myapp.json.tpl")}"
   vars {
@@ -5,6 +6,10 @@ data "template_file" "myapp" {
     AWS_REGION = "${var.AWS_REGION}"
     LOGS_GROUP = "${aws_cloudwatch_log_group.myapp.name}"
   }
+}
+
+data "aws_ecs_task_definition" "myapp" {
+  task_definition = "${aws_ecs_task_definition.myapp.family}"
 }
 
 resource "aws_ecs_task_definition" "myapp" {
@@ -21,8 +26,10 @@ resource "aws_ecs_service" "myapp" {
   name            = "myapp"
   cluster         = "${aws_ecs_cluster.fargate.id}"
   launch_type     = "FARGATE"
-  task_definition = "${aws_ecs_task_definition.myapp.arn}"
-  desired_count   = 1
+  # task_definition = "${aws_ecs_task_definition.myapp.arn}"
+  task_definition = "${replace(aws_ecs_task_definition.myapp.arn, "/:\\d*$/", "")}:${max("${aws_ecs_task_definition.myapp.revision}", "${data.aws_ecs_task_definition.myapp.revision}")}"
+
+  desired_count   = 2
 
   network_configuration = {
     subnets = ["${module.base_vpc.private_subnets[0]}"]
