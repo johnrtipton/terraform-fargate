@@ -35,6 +35,14 @@ variable "CIDR_PUBLIC" {
   default = "10.0.101.0/24,10.0.102.0/24"
 }
 
+variable "DOMAIN_ZONE_ID" {
+  default = "Z1YNROBTIF0N37"
+}
+
+variable "PROD_DNS_HOST" {
+  default = "tempcheck.trylinux.org"
+}
+
 variable "ECR_REPO_URL" {
   default = "226671803964.dkr.ecr.us-east-1.amazonaws.com/myapp"
 }
