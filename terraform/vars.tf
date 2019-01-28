@@ -46,3 +46,12 @@ variable "PROD_DNS_HOST" {
 variable "ECR_REPO_URL" {
   default = "226671803964.dkr.ecr.us-east-1.amazonaws.com/myapp"
 }
+
+# -- DEV --
+variable "DEV_DNS_HOST" {
+  default = "dev.tempcheck.trylinux.org"
+}
+
+variable "DEV_ECR_REPO_URL" {
+  default = "226671803964.dkr.ecr.us-east-1.amazonaws.com/myapp_dev"
+}

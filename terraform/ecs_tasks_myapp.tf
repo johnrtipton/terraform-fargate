@@ -46,3 +46,43 @@ resource "aws_ecs_service" "myapp" {
     "aws_alb_listener.myapp"
   ]
 }
+
+# -- DEV --
+data "dev_aws_ecs_task_definition" "myapp_dev" {
+  task_definition = "${aws_ecs_task_definition.myapp.family}"
+}
+
+resource "aws_ecs_task_definition" "myapp_dev" {
+  family                = "myapp"
+  requires_compatibilities = ["FARGATE"]
+  network_mode = "awsvpc"
+  cpu = 256
+  memory = 512
+  container_definitions = "${data.template_file.myapp.rendered}"
+  execution_role_arn = "${aws_iam_role.ecs_task_assume.arn}"
+}
+
+resource "aws_ecs_service" "myapp_dev" {
+  name            = "myapp_dev"
+  cluster         = "${aws_ecs_cluster.fargate.id}"
+  launch_type     = "FARGATE"
+  # task_definition = "${aws_ecs_task_definition.myapp.arn}"
+  task_definition = "${replace(aws_ecs_task_definition.myapp_dev.arn, "/:\\d*$/", "")}:${max("${aws_ecs_task_definition.myapp_dev.revision}", "${data.dev_aws_ecs_task_definition.myapp_dev.revision}")}"
+
+  desired_count   = 1
+
+  network_configuration = {
+    subnets = ["${module.base_vpc.private_subnets[0]}"]
+    security_groups = ["${aws_security_group.ecs.id}"]
+  }
+
+  load_balancer {
+   target_group_arn = "${aws_alb_target_group.myapp_dev.arn}"
+   container_name = "myapp_dev"
+   container_port = 5000
+  }
+
+  depends_on = [
+    "aws_alb_listener.myapp_dev"
+  ]
+}
