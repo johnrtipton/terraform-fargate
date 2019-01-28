@@ -48,17 +48,26 @@ resource "aws_ecs_service" "myapp" {
 }
 
 # -- DEV --
+data "template_file" "myapp_dev" {
+  template = "${file("templates/ecs/myapp_dev.json.tpl")}"
+  vars {
+    REPOSITORY_URL = "${var.ECR_REPO_URL}"
+    AWS_REGION = "${var.AWS_REGION}"
+    LOGS_GROUP = "${aws_cloudwatch_log_group.myapp_dev.name}"
+  }
+}
+
 data "aws_ecs_task_definition" "myapp_dev" {
-  task_definition = "${aws_ecs_task_definition.myapp.family}"
+  task_definition = "${aws_ecs_task_definition.myapp_dev.family}"
 }
 
 resource "aws_ecs_task_definition" "myapp_dev" {
-  family                = "myapp"
+  family                = "myapp_dev"
   requires_compatibilities = ["FARGATE"]
   network_mode = "awsvpc"
   cpu = 256
   memory = 512
-  container_definitions = "${data.template_file.myapp.rendered}"
+  container_definitions = "${data.template_file.myapp_dev.rendered}"
   execution_role_arn = "${aws_iam_role.ecs_task_assume.arn}"
 }
 
