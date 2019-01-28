@@ -48,7 +48,7 @@ resource "aws_ecs_service" "myapp" {
 }
 
 # -- DEV --
-data "dev_aws_ecs_task_definition" "myapp_dev" {
+data "aws_ecs_task_definition" "myapp_dev" {
   task_definition = "${aws_ecs_task_definition.myapp.family}"
 }
 
@@ -67,7 +67,7 @@ resource "aws_ecs_service" "myapp_dev" {
   cluster         = "${aws_ecs_cluster.fargate.id}"
   launch_type     = "FARGATE"
   # task_definition = "${aws_ecs_task_definition.myapp.arn}"
-  task_definition = "${replace(aws_ecs_task_definition.myapp_dev.arn, "/:\\d*$/", "")}:${max("${aws_ecs_task_definition.myapp_dev.revision}", "${data.dev_aws_ecs_task_definition.myapp_dev.revision}")}"
+  task_definition = "${replace(aws_ecs_task_definition.myapp_dev.arn, "/:\\d*$/", "")}:${max("${aws_ecs_task_definition.myapp_dev.revision}", "${data.aws_ecs_task_definition.myapp_dev.revision}")}"
 
   desired_count   = 1
 

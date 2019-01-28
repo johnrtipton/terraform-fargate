@@ -47,7 +47,7 @@ output "alb_dns_name" {
 
 # -- DEV --
 resource "aws_alb" "myapp_dev" {
-  name = "myapp_dev"
+  name = "myappdev"
   internal = false
 
   security_groups = [
@@ -62,7 +62,7 @@ resource "aws_alb" "myapp_dev" {
 }
 
 resource "aws_alb_target_group" "myapp_dev" {
-  name = "myapp_dev"
+  name = "myappdev"
   protocol = "HTTP"
   port = "5000"
   vpc_id = "${module.base_vpc.vpc_id}"
