@@ -1,3 +1,7 @@
 *.pem
 *.pub
 terraform/.terraform
+
+terraform/deploy/venv/
+
+terraform/deploy/
