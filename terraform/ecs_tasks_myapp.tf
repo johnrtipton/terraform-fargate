@@ -1,7 +1,7 @@
 data "template_file" "myapp" {
   template = "${file("templates/ecs/myapp.json.tpl")}"
   vars {
-    REPOSITORY_URL = "${aws_ecr_repository.myapp.repository_url}"
+    REPOSITORY_URL = "${var.ECR_REPO_URL}"
     AWS_REGION = "${var.AWS_REGION}"
     LOGS_GROUP = "${aws_cloudwatch_log_group.myapp.name}"
   }
