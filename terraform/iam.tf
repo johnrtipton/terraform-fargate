@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "report-bucket" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.REPORT_BUCKET_URL}"
+      "arn:aws:s3:::${var.REPORT_BUCKET_NAME}"
     ]
   }
 
@@ -64,7 +64,7 @@ data "aws_iam_policy_document" "report-bucket" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.REPORT_BUCKET_URL}/*"
+      "arn:aws:s3:::${var.REPORT_BUCKET_NAME}/*"
     ]
   }
 }

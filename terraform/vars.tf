@@ -56,6 +56,6 @@ variable "DEV_ECR_REPO_URL" {
   default = "226671803964.dkr.ecr.us-east-1.amazonaws.com/myapp_dev"
 }
 
-variable "REPORT_BUCKET_URL" {
+variable "REPORT_BUCKET_NAME" {
   default = "test-reports.trylinux.org"
 }
