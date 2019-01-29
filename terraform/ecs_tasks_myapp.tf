@@ -32,7 +32,7 @@ resource "aws_ecs_service" "myapp" {
   desired_count   = 2
 
   network_configuration = {
-    subnets = ["${module.base_vpc.private_subnets[0]}"]
+    subnets = ["${module.base_vpc.private_subnets}"]
     security_groups = ["${aws_security_group.ecs.id}"]
   }
 
