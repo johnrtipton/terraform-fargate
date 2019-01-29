@@ -42,3 +42,61 @@ resource "aws_iam_role_policy" "ecs_task_assume" {
 }
 EOF
 }
+
+# -- REPORT BUCKET
+
+data "aws_iam_policy_document" "report-bucket" {
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.REPORT_BUCKET_URL}"
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.REPORT_BUCKET_URL}/*"
+    ]
+  }
+}
+
+resource "aws_iam_user" "codefres-report" {
+  name = "tf_codefres_report"
+  path = "/system/"
+  tags = {
+    created_by = "terraform"
+    project = "temp_check"
+  }
+}
+
+
+resource "aws_iam_user_policy" "report_bucket_policy" {
+  name = "tf-iam-role-policy-s3-report-bucket-rw"
+  user = "${aws_iam_user.codefres-report.name}"
+  policy = "${data.aws_iam_policy_document.report-bucket.json}"
+}
+
+
+# -- REPORT BUCKET ACCESS KEY
+
+resource "aws_iam_access_key" "report_bucket" {
+  user    = "${aws_iam_user.codefres-report.name}"
+  pgp_key = "keybase:jrtipton"
+}
+
+output "report_bucket_secret_key" {
+  value = "${aws_iam_access_key.report_bucket.id}"
+}
+
+output "report_bucket_encrypted_secret" {
+  value = "${aws_iam_access_key.report_bucket.encrypted_secret}"
+}

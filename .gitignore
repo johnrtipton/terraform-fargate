@@ -5,3 +5,5 @@ terraform/.terraform
 terraform/deploy/venv/
 
 terraform/deploy/
+
+terraform/\.idea/
